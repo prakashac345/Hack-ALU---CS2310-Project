@@ -1,0 +1,23 @@
+CHIP OutO
+{
+ IN x[16],p;
+ OUT o[16];
+ PARTS:
+ //by default p=0;
+ And(a=x[0],b=p,out=o[0]);
+ And(a=x[1],b=p,out=o[1]);
+ And(a=x[2],b=p,out=o[2]);
+ And(a=x[3],b=p,out=o[3]);
+ And(a=x[4],b=p,out=o[4]);
+ And(a=x[5],b=p,out=o[5]);
+ And(a=x[6],b=p,out=o[6]);
+ And(a=x[7],b=p,out=o[7]);
+ And(a=x[8],b=p,out=o[8]);
+ And(a=x[9],b=p,out=o[9]);
+ And(a=x[10],b=p,out=o[10]);
+ And(a=x[11],b=p,out=o[11]);
+ And(a=x[12],b=p,out=o[12]);
+ And(a=x[13],b=p,out=o[13]);
+ And(a=x[14],b=p,out=o[14]);
+ And(a=x[15],b=p,out=o[15]);
+}

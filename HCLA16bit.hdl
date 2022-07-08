@@ -1,0 +1,228 @@
+
+
+   /*
+      Chip name: And
+      Inputs: a, b
+      Outputs: out
+      Function: If a=b=1 then out=1 else out=0.
+   */
+
+   /*
+      Chip name: Or
+      Inputs: a, b
+      Outputs: out
+      Function: If a=b=0 then out=0 else out=1
+   */
+ 
+   /*
+      Chip name: Xor
+      Inputs: a, b
+      Outputs: out
+      Function: If a=/b then out=1 else out=0.
+  */
+
+
+
+CHIP HCLA16bit{
+IN x[16], y[16], c0;
+OUT s[16];
+PARTS:
+   /*Adder/subtrctor Xor operation Done in class if c0 = 1 subraction, c0 = 0 addition */
+  Xor (a=y[0], b=c0, out=y0);
+  Xor (a=y[1], b=c0, out=y1);
+  Xor (a=y[2], b=c0, out=y2);
+  Xor (a=y[3], b=c0, out=y3);
+  Xor (a=y[4], b=c0, out=y4);
+  Xor (a=y[5], b=c0, out=y5);
+  Xor (a=y[6], b=c0, out=y6);
+  Xor (a=y[7], b=c0, out=y7);
+  Xor (a=y[8], b=c0, out=y8);
+  Xor (a=y[9], b=c0, out=y9);
+  Xor (a=y[10], b=c0, out=y10);
+  Xor (a=y[11], b=c0, out=y11);
+  Xor (a=y[12], b=c0, out=y12);
+  Xor (a=y[13], b=c0, out=y13);
+  Xor (a=y[14], b=c0, out=y14);
+  Xor (a=y[14], b=c0, out=y15);
+
+   /*generating propagate terms*/
+   /* pi = Xor(x[i], yi) pi is ith propagate term*/
+  Xor (a=x[0], b=y0, out=p0);
+  Xor (a=x[1], b=y1, out=p1);
+  Xor (a=x[2], b=y2, out=p2);
+  Xor (a=x[3], b=y3, out=p3);
+  Xor (a=x[4], b=y4, out=p4);
+  Xor (a=x[5], b=y5, out=p5);
+  Xor (a=x[6], b=y6, out=p6);
+  Xor (a=x[7], b=y7, out=p7);
+  Xor (a=x[8], b=y8, out=p8);
+  Xor (a=x[9], b=y9, out=p9);
+  Xor (a=x[10], b=y10, out=p10);
+  Xor (a=x[11], b=y11, out=p11);
+  Xor (a=x[12], b=y12, out=p12);
+  Xor (a=x[13], b=y13, out=p13);
+  Xor (a=x[14], b=y14, out=p14);
+  Xor (a=x[15], b=y15, out=p15);
+ 
+   /*generator terms*/
+   /* gi = And (x[i], yi) , gi is ith generate term */
+  And (a=x[0], b=y0, out=g0);
+  And (a=x[1], b=y1, out=g1);
+  And (a=x[2], b=y2, out=g2);
+  And (a=x[3], b=y3, out=g3);
+  And (a=x[4], b=y4, out=g4);
+  And (a=x[5], b=y5, out=g5);
+  And (a=x[6], b=y6, out=g6);
+  And (a=x[7], b=y7, out=g7);
+  And (a=x[8], b=y8, out=g8);
+  And (a=x[9], b=y9, out=g9);
+  And (a=x[10], b=y10, out=g10);
+  And (a=x[11], b=y11, out=g11);
+  And (a=x[12], b=y12, out=g12);
+  And (a=x[13], b=y13, out=g13);
+  And (a=x[14], b=y14, out=g14);
+  And (a=x[15], b=y15, out=g15);
+
+   /*High level propagate terms*/
+   /*Pij is the j th high level propagte term*/
+
+   /* Pi0 = p3*p2*p1 like this we calculate remaining terms...*/
+  And (a=p0, b=p1, out=out1);
+  And (a=p2, b=out1, out=out2);
+  And (a=p3, b=out2, out=Pi0);
+
+  And (a=p4, b=p5, out=out3);
+  And (a=p6, b=out3, out=out4);
+  And (a=p7, b=out4, out=Pi1);
+
+  And (a=p8, b=p9, out=out5);
+  And (a=p10, b=out5, out=out6);
+  And (a=p11, b=out6, out=Pi2);
+
+  And (a=p12, b=p13, out=out7);
+  And (a=p14, b=out7, out=out8);
+  And (a=p15, b=out8, out=Pi3);
+
+
+
+   /*high level generate terms*/
+   /*Gij is the jth high level generate terms*/
+   /*Gi0*/
+  And (a=p3, b=p2, out=ou10);
+  And (a=p1, b=ou10, out=ou20);
+  And (a=ou20, b=g0, out=o10);
+  And (a=ou10, b=g1, out=o20);
+  And (a=p3, b=g2, out=o30);
+  Or (a=o10, b=o20, out=t10);
+  Or (a=t10, b=o30, out=t20);
+  Or (a=t20, b=g3, out=Gi0);
+
+
+  And (a=p7, b=p6, out=ou11);
+  And (a=p5, b=ou11, out=ou21);
+  And (a=ou21, b=g4, out=o11);
+  And (a=ou11, b=g5, out=o21);
+  And (a=p7, b=g6, out=o31);
+  Or (a=o11, b=o21, out=t11);
+  Or (a=t11, b=o31, out=t21);
+  Or (a=t21, b=g7, out=Gi1);
+
+
+  And (a=p11, b=p10, out=ou12);
+  And (a=p9, b=ou12, out=ou22);
+  And (a=ou22, b=g8, out=o12);
+  And (a=ou12, b=g9, out=o22);
+  And (a=p11, b=g10, out=o32);
+  Or (a=o12, b=o22, out=t12);
+  Or (a=t12, b=o32, out=t22);
+  Or (a=t22, b=g11, out=Gi2);
+
+
+  And (a=p15, b=p14, out=ou13);
+  And (a=p13, b=ou13, out=ou23);
+  And (a=ou23, b=g12, out=o13);
+  And (a=ou13, b=g13, out=o23);
+  And (a=p15, b=g14, out=o33);
+  Or (a=o13, b=o23, out=t13);
+  Or (a=t13, b=o33, out=t23);
+  Or (a=t23, b=g15, out=Gi3);
+
+
+/* carry bits found using high level propagates and generates terms*/
+    /* carry bits and sum bits  found using high level propagates and generates terms*/
+   /* sum bit si = Xor (pi, ,ci)*/
+   /*carry bit ci where 4 doesnot divide i 
+     ci+1 = ci*pi + gi */
+   /* if 4 divides i 
+      we can use high level propagate and generate terms to find ci*/
+   /* ci = Pij* c(i-4) + Gij
+      eg : c8 = Pi1*c4 + Gi1*/
+
+  Xor (a=p0, b=c0, out=s[0]);
+  And (a=p0, b=c0, out=z0);
+  Or (a=z0, b=g0, out=c1);
+
+  Xor (a=p1, b=c1, out=s[1]);
+  And (a=p1, b=c1, out=z1);
+  Or (a=z1, b=g1, out=c2);
+
+  Xor (a=p2, b=c2, out=s[2]);
+  And (a=p2, b=c2, out=z2);
+  Or (a=z2, b=g2, out=c3);
+
+  Xor (a=p3, b=c3, out=s[3]);
+  And (a=Pi0, b=c0, out=z3);
+  Or (a=z3, b=Gi0, out=c4);
+
+
+  Xor (a=p4, b=c4, out=s[4]);
+  And (a=p4, b=c4, out=z4);
+  Or (a=z4, b=g4, out=c5);
+
+  Xor (a=p5, b=c5, out=s[5]);
+  And (a=p5, b=c5, out=z5);
+  Or (a=z5, b=g5, out=c6);
+
+  Xor (a=p6, b=c6, out=s[6]);
+  And (a=p6, b=c6, out=z6);
+  Or (a=z6, b=g6, out=c7);
+
+  Xor (a=p7, b=c7, out=s[7]);
+  And (a=Pi1, b=c4, out=z7);
+  Or (a=z7, b=Gi1, out=c8);
+
+
+  Xor (a=p8, b=c8, out=s[8]);
+  And (a=p8, b=c8, out=z8);
+  Or (a=z8, b=g8, out=c9);
+
+  Xor (a=p9, b=c9, out=s[9]);
+  And (a=p9, b=c9, out=z9);
+  Or (a=z9, b=g9, out=c10);
+
+  Xor (a=p10, b=c10, out=s[10]);
+  And (a=p10, b=c10, out=z10);
+  Or (a=z10, b=g10, out=c11);
+
+  Xor (a=p11, b=c11, out=s[11]);
+  And (a=Pi2, b=c8, out=z11);
+  Or (a=z11, b=Gi2, out=c12);
+
+
+  Xor (a=p12, b=c12, out=s[12]);
+  And (a=p12, b=c12, out=z12);
+  Or (a=z12, b=g12, out=c13);
+
+  Xor (a=p13, b=c13, out=s[13]);
+  And (a=p13, b=c13, out=z13);
+  Or (a=z13, b=g13, out=c14);
+
+  Xor (a=p14, b=c14, out=s[14]);
+  And (a=p14, b=c14, out=z14);
+  Or (a=z14, b=g14, out=c15);
+
+  Xor (a=p15, b=c15, out=s[15]);
+  And (a=Pi3, b=c12, out=z15);
+  Or (a=z15, b=Gi3, out=c16);
+
+}

@@ -1,0 +1,50 @@
+/*CHIP name:And
+ Inputs:a,b
+ Output:out
+ Function:if a=b=1 then out=1 else out=0
+*/
+
+/*CHIP name:Or
+ Inputs:a,b
+ Output:out
+ Function:if a=b=0 then out=0 else out=1
+*/
+
+/*CHIP name:Not
+ Inputs:in
+ Output:out
+ Function:if a=1 then out=0 else out=1
+*/
+
+ /*this is Hack ALU circuit */
+CHIP Q1
+{
+ IN x[16],y[16],p1,zx,zy,nx,ny,f,no;
+ OUT out[16];
+ PARTS:
+ //by default p=0;
+ //calculate zx and zy i.e. the select lines for 2to1 multiplexer
+
+ /*calculate o i.e. the input for 16 bit 2to1 multiplexer*/
+ OutO(x=x,p=p1,o=o);
+
+ /*multiplexer is 16 bit mux circuit*/
+ multiplexer(x=x,y=o,s=zx,z=o1);
+ multiplexer(x=y,y=o,s=zy,z=o2);
+
+ /*xor16 is a circuit which calculates the bitwise xor value*/
+ Xor16(a=o1,b=nx,out=p);
+ Xor16(a=o2,b=ny,out=q);
+
+ /*16 bit adder*/
+ HCLA16bit(x=p,y=q,s=add);
+ 
+ /*which calculates p and q bitwise */
+ pandq(x=p,y=q,z=and);
+ 
+
+ multiplexer(x=and,y=add,s=f,z=r);
+
+ 
+ Xor16(a=r,b=no,out=out);
+}
